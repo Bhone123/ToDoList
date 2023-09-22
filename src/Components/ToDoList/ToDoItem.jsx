@@ -4,15 +4,16 @@ import {
   RiCheckFill,
   RiCloseFill,
 } from "react-icons/ri";
-import { useContext,useRef,useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { ToDoContext } from "../../Context/ToDoProvider";
+import completed from "../../assets/completed2.mp3";
 
 const ToDoItem = ({ todo }) => {
-  const { DeleteToDo,editToDo } = useContext(ToDoContext);
+  const { DeleteToDo, editToDo } = useContext(ToDoContext);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const refEditInput = useRef(null);
-
+  const useRefaudio = useRef(new Audio(completed));
 
   const DeleteHandler = () => {
     DeleteToDo(todo.id);
@@ -38,17 +39,20 @@ const ToDoItem = ({ todo }) => {
   };
 
   const CompleteCheckHandler = (e) => {
+    if(e.target.checked){
+      useRefaudio.current.value = 1;
     console.log(e.target.checked);
+    useRefaudio.current.play();
+    }
     todo.completed = e.target.checked;
     editToDo(todo);
   };
-
 
   return (
     <div className="flex mt-4 justify-between items-center w-full bg-gray-700 py-2 px-5">
       <div className="flex gap-2">
         <input
-        onClick={(e) => CompleteCheckHandler(e)}
+          onClick={(e) => CompleteCheckHandler(e)}
           type="checkbox"
           name="chk-completed"
           id="completed"
@@ -76,23 +80,34 @@ const ToDoItem = ({ todo }) => {
         />
       </div>
 
-
       {isEditMode ? (
         <div className="flex justify-center">
           <button className="mr-4" onClick={SaveChangeHandler}>
-            <RiCheckFill size={32} className="text-white border-2 border-white p-1 rounded-md" />
+            <RiCheckFill
+              size={32}
+              className="text-white border-2 border-white p-1 rounded-md"
+            />
           </button>
           <button onClick={CancelHandler}>
-            <RiCloseFill size={32} className="text-white border-2 border-white p-1 rounded-md" />
+            <RiCloseFill
+              size={32}
+              className="text-white border-2 border-white p-1 rounded-md"
+            />
           </button>
         </div>
       ) : (
         <div className="flex justify-center">
           <button className="mr-4" onClick={EditHandler}>
-            <RiEdit2Fill size={32} className="text-white border-2 border-white p-1 rounded-md" />
+            <RiEdit2Fill
+              size={32}
+              className="text-white border-2 border-white p-1 rounded-md"
+            />
           </button>
           <button onClick={DeleteHandler}>
-            <RiDeleteBin2Fill size={32} className="text-white border-2 border-white p-1 rounded-md" />
+            <RiDeleteBin2Fill
+              size={32}
+              className="text-white border-2 border-white p-1 rounded-md"
+            />
           </button>
         </div>
       )}
